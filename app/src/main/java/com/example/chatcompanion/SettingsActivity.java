@@ -101,12 +101,15 @@ public class SettingsActivity extends Activity {
     }
     
     private void downloadModel() {
-        modelStatusText.setText("⬇️ Starting Download...");
+        long existingSize = ModelManager.getModelSize(this);
+        int initialProgress = (int) ((existingSize * 100) / 4370911744L);
+        
+        modelStatusText.setText(existingSize > 0 ? "⬇️ Resuming Download..." : "⬇️ Starting Download...");
         downloadButton.setVisibility(View.GONE);
         downloadProgressBar.setVisibility(View.VISIBLE);
         downloadProgressText.setVisibility(View.VISIBLE);
-        downloadProgressBar.setProgress(0);
-        downloadProgressText.setText("0%");
+        downloadProgressBar.setProgress(initialProgress);
+        downloadProgressText.setText(initialProgress + "%");
         
         ModelDownloader.DownloadProgress progress = new ModelDownloader.DownloadProgress() {
             @Override
