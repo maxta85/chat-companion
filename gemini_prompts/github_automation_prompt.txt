@@ -1,0 +1,127 @@
+# Gemini Agent Prompt - GitHub Automation and Release System
+# Copy and paste this into Android Studio's AI agent
+
+---
+I need you to understand and implement the GitHub automation system we've created for our Chat Companion app.
+
+## GitHub Automation System Overview
+
+### What We've Built:
+1. **Git Repository** - Project is on GitHub at https://github.com/maxta85/chat-companion
+2. **Release Automation** - Batch script that automates GitHub releases
+3. **App Update System** - AboutActivity that checks GitHub for updates
+4. **Version Management** - version.txt for tracking app versions
+
+### Current Automation Components:
+
+#### 1. GitHub Release Script (`create_github_release.bat`)
+- **Purpose:** Automates creating GitHub releases
+- **Functionality:**
+  - Checks for APK existence
+  - Reads version from version.txt
+  - Opens GitHub releases page automatically
+  - Opens APK file location for upload
+  - Provides step-by-step instructions
+
+#### 2. Version Management (`version.txt`)
+- **Purpose:** Track current app version
+- **Location:** Project root directory
+- **Content:** "1.0" (current version)
+
+#### 3. App Update System (`AboutActivity.java`)
+- **Purpose:** Check GitHub for app updates
+- **Functionality:**
+  - Checks version.txt on GitHub
+  - Downloads latest APK from releases
+  - Installs updates automatically
+  - Shows download progress
+
+### GitHub URLs Used:
+- **Version check:** https://raw.githubusercontent.com/maxta85/chat-companion/main/version.txt
+- **APK download:** https://github.com/maxta85/chat-companion/releases/download/latest/chat-companion.apk
+- **Repository:** https://github.com/maxta85/chat-companion
+
+### Release Workflow:
+1. **Build APK** - Use build_and_deploy.bat
+2. **Run automation** - Execute create_github_release.bat
+3. **Create release** - Follow script instructions
+4. **Upload APK** - Drag and drop from opened folder
+5. **Publish release** - Make it available to users
+
+### What I Need You to Implement:
+
+#### 1. Add AboutActivity to AndroidManifest.xml
+```xml
+<activity
+    android:name=".AboutActivity"
+    android:exported="false" />
+```
+
+#### 2. Add Required Permissions
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+```
+
+#### 3. Create AboutActivity.java
+Implement the complete AboutActivity with:
+- Version display
+- Update checking from GitHub
+- Download progress tracking
+- Auto-installation
+- GitHub repository link
+
+#### 4. Create activity_about.xml
+Professional Material Design UI with:
+- App information card
+- Update management section
+- Progress indicators
+- Action buttons
+
+#### 5. Update MainActivity.java
+Add "About" button that opens AboutActivity
+
+#### 6. Ensure build.gradle has correct version
+```gradle
+versionCode 1
+versionName "1.0"
+```
+
+### Key Integration Points:
+- **Git Integration:** Android Studio should detect Git repository
+- **GitHub URLs:** Hardcoded for update checking
+- **Version Synchronization:** version.txt must match build.gradle versionName
+- **Release Automation:** Batch script handles GitHub releases
+
+### Benefits of This System:
+- **Self-updating app** - Users get updates automatically
+- **Version control** - Professional release management
+- **Automation** - Semi-automated release process
+- **GitHub integration** - Free hosting and distribution
+- **Professional workflow** - Industry-standard practices
+
+### Testing Requirements:
+1. **Version checking** works with GitHub
+2. **Download progress** displays correctly
+3. **Installation** works on Android devices
+4. **Error handling** for network issues
+5. **UI responsiveness** during updates
+
+## Project Context:
+- App: Chat Companion with Mistral 7B offline LLM
+- Goal: Complete self-updating app system
+- Platform: Android with GitHub integration
+- Automation: Semi-automated releases with batch scripts
+- User Experience: Professional update management
+
+## Priority:
+- Implement AboutActivity with full update functionality
+- Add all required permissions and manifest entries
+- Test complete update workflow
+- Ensure GitHub integration works properly
+- Verify automation script compatibility
+
+Please implement this complete GitHub automation and app update system. This will give us a professional, self-updating Android app with automated release management!
+
+---

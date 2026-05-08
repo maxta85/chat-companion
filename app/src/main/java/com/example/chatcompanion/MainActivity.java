@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 import android.widget.Toast;
-import java.io.File;
 
 public class MainActivity extends Activity {
     
@@ -34,22 +33,53 @@ public class MainActivity extends Activity {
         chatDisplay.setText("Chat Companion - Ready!\n\n");
         responseText.setText("LLM Response will appear here");
 
-        // Add settings button
+        // Add settings and about buttons
+        LinearLayout inputLayout = (LinearLayout) sendButton.getParent();
+        
         Button settingsButton = new Button(this);
         settingsButton.setText("⚙️ Settings");
         settingsButton.setLayoutParams(new LinearLayout.LayoutParams(
+            0,
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            0.5f
         ));
 
-        // Add settings button to the layout (after the send button)
-        LinearLayout inputLayout = (LinearLayout) sendButton.getParent();
-        inputLayout.addView(settingsButton);
+        Button aboutButton = new Button(this);
+        aboutButton.setText("ℹ️ About");
+        aboutButton.setLayoutParams(new LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            0.5f
+        ));
+
+        // Create a horizontal layout for settings and about buttons
+        LinearLayout extraButtonsLayout = new LinearLayout(this);
+        extraButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        extraButtonsLayout.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        extraButtonsLayout.addView(settingsButton);
+        extraButtonsLayout.addView(aboutButton);
+
+        // Add the extra buttons layout to the main input layout
+        // We need to add it to the parent of inputLayout if it's a vertical layout
+        LinearLayout mainLayout = (LinearLayout) inputLayout.getParent();
+        int index = mainLayout.indexOfChild(inputLayout);
+        mainLayout.addView(extraButtonsLayout, index);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        aboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intent);
             }
         });

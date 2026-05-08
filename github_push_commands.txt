@@ -1,0 +1,12 @@
+# GitHub Push Commands
+# Run these in PowerShell from your project directory
+
+# Step 1: Add GitHub remote (replace YOUR_USERNAME with your actual GitHub username)
+git remote add origin https://github.com/YOUR_USERNAME/chat-companion.git
+
+# Step 2: Push to GitHub
+git branch -M main
+git push -u origin main
+
+# Alternative if you want to use 'master' branch:
+# git push -u origin master

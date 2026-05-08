@@ -1,0 +1,28 @@
+# GitHub Setup for App Updates
+
+## Step 1: Create GitHub Release
+1. Go to: https://github.com/maxta85/chat-companion/releases
+2. Click "Create a new release"
+3. Tag: v1.0
+4. Title: "Chat Companion v1.0 - Initial Release"
+5. Description: "Initial release with Mistral 7B offline AI assistant"
+6. Upload your APK file as an asset
+7. Publish release
+
+## Step 2: Update version.txt
+After each release, update version.txt with the new version number and push to GitHub.
+
+## Step 3: Release Structure
+```
+https://github.com/maxta85/chat-companion/releases/download/v1.0/chat-companion.apk
+```
+
+## Step 4: Version Checking Flow
+App checks: https://raw.githubusercontent.com/maxta85/chat-companion/main/version.txt
+Downloads: https://github.com/maxta85/chat-companion/releases/download/latest/chat-companion.apk
+
+## Step 5: Future Updates
+1. Build new APK
+2. Create new GitHub release (v1.1, v1.2, etc.)
+3. Update version.txt
+4. Push changes to GitHub
