@@ -1,0 +1,49 @@
+# Gemini Agent Prompt - Build Project
+# Copy and paste this into Android Studio's AI agent
+
+---
+Great progress! The service classes are created and the dependency is fixed. Now let's build the project.
+
+## Task: Build the Chat Companion App
+
+### 1. Sync and Build
+Please:
+- Click **"Sync Project with Gradle Files"** or the elephant icon
+- Wait for sync to complete (should work now with the fixed dependency)
+- Click **"Build"** → **"Build Bundle(s) / APK(s)"** → **"Build APK(s)**"
+
+### 2. Monitor Build Progress
+Watch for:
+- **Gradle sync successful** (dependency resolution fixed)
+- **Compilation successful** (Java files compile without errors)
+- **APK generation complete** (app-debug.apk created)
+
+### 3. Expected Results
+- **APK Location**: app/build/outputs/apk/debug/app-debug.apk
+- **Size**: ~6-8MB (without model)
+- **Status**: Ready for testing
+
+### 4. If Issues Occur
+Check for:
+- **Dependency errors** (should be resolved with llamacpp-kotlin)
+- **Compilation errors** (check Java syntax)
+- **Missing imports** (add any needed imports)
+
+## Project Context:
+- App: Chat Companion with offline LLM integration
+- Recent Changes: 
+  - ✅ Fixed llama.cpp dependency (using llamacpp-kotlin)
+  - ✅ Created LLMService.java (Singleton pattern)
+  - ✅ Created ModelManager.java (Model file management)
+  - ✅ Updated MainActivity.java (Async UI integration)
+- Goal: Build APK for testing
+
+## Priority:
+- Get successful build
+- Verify all Java files compile
+- Generate working APK
+- Prepare for device testing
+
+Please build the project and let me know the results! If any errors occur, please share the error messages so I can help fix them.
+
+---

@@ -1,0 +1,12 @@
+﻿[19:28:50] - INFO - Fixed missing mipmap/ic_launcher by creating drawable/ic_app_icon.xml
+[19:29:06] - STATUS - Starting Gradle build (:app:assembleDebug)
+[19:29:28] - STATUS - Build completed successfully. APK generated at app/build/outputs/apk/debug/app-debug.apk
+[19:29:44] - INFO - Dependency Resolution: androidx.appcompat:1.6.1, com.google.android.material:1.10.0, androidx.constraintlayout:2.1.4 resolved.
+[19:30:20] - INFO - APK generation complete. Size: 5.33 MB. Optimized for first-time installation.
+[20:06:43] - INFO - Added llama.cpp, WorkManager, and Coroutines dependencies. Added storage and internet permissions.
+[20:07:24] - STATUS - Gradle Sync successful after adding llama.cpp dependencies.
+[20:09:06] - INFO - Created LLMService and ModelManager. Updated MainActivity with async LLM integration.
+[20:23:24] - STATUS - Build Successful. APK generated at app/build/outputs/apk/debug/app-debug.apk. Size: 52.16 MB. compileSdk updated to 36 for llamacpp-kotlin compatibility.
+[20:42:47] - INFO - Upgraded model to Mistral 7B (4.1GB). Updated ModelDownloader, ModelManager, and enhanced LLMService responses.
+[18:41:48] - STATUS - Fixed real model loading logic. Bridged Kotlin SharedFlow to Java in LLMService. Updated MainActivity with detailed status logging.
+[18:45:11] - INFO - Created SettingsActivity and activity_settings.xml. Updated MainActivity with settings button and manual model download flow.

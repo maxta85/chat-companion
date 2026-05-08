@@ -1,0 +1,3 @@
+-keep class com.ggml.** { *; }
+-keep class org.ggml.** { *; }
+-keep class llama.cpp.** { *; }

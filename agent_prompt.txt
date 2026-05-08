@@ -1,0 +1,35 @@
+# PROMPT FOR ANDROID STUDIO AI AGENT
+# ===================================
+# 
+# Copy and paste this into the Android Studio AI agent chat:
+
+---
+Hello! I'm building an Android chat companion app for offline LLM integration. Please help me monitor and optimize the build process.
+
+## Build Monitoring Instructions:
+1. Please dump all build progress, errors, and status updates to the file: 
+   C:\Users\maxjk\CascadeProjects\android_chat_companion\build_monitor_dump.txt
+
+2. Use this format for each entry:
+   [HH:MM:SS] - [STATUS/ERROR/INFO] - [Detailed message]
+
+3. Focus on:
+   - Gradle sync progress
+   - Dependency resolution
+   - Build compilation steps
+   - APK generation
+   - Any errors or warnings
+
+## Project Context:
+- App: Chat Companion for Samsung S26 Ultra
+- Purpose: Offline LLM chat interface
+- Current state: Basic UI with MainActivity.java and activity_main.xml
+- Goal: Generate installable APK
+
+## Priority:
+- Get the APK built successfully
+- Fix any build errors
+- Optimize for first-time installation
+
+Please start monitoring and dump build data immediately. Thank you!
+---

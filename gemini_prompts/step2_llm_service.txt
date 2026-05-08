@@ -1,0 +1,213 @@
+# Gemini Agent Prompt - Step 2: Create LLM Service Class
+# Copy and paste this into Android Studio's AI agent
+
+---
+Excellent work on Step 1! Now let's create the core LLM service class for inference.
+
+## Task: Create LLM Service Classes
+
+### 1. Create LLMService.java
+Create file: app/src/main/java/com/example/chatcompanion/LLMService.java
+
+```java
+package com.example.chatcompanion;
+
+import android.content.Context;
+import android.util.Log;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class LLMService {
+    private static final String TAG = "LLMService";
+    private static LLMService instance;
+    private final ExecutorService executor;
+    private boolean isModelLoaded = false;
+    private Context context;
+    
+    private LLMService(Context context) {
+        this.context = context.getApplicationContext();
+        this.executor = Executors.newSingleThreadExecutor();
+    }
+    
+    public static synchronized LLMService getInstance(Context context) {
+        if (instance == null) {
+            instance = new LLMService(context);
+        }
+        return instance;
+    }
+    
+    public CompletableFuture<Boolean> loadModel() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Log.d(TAG, "Starting model load...");
+                // TODO: Load llama.cpp model here
+                Thread.sleep(2000); // Simulate loading time
+                isModelLoaded = true;
+                Log.d(TAG, "Model loaded successfully");
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to load model", e);
+                return false;
+            }
+        }, executor);
+    }
+    
+    public CompletableFuture<String> generateResponse(String prompt) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (!isModelLoaded) {
+                return "Model not loaded yet. Please wait...";
+            }
+            
+            try {
+                Log.d(TAG, "Generating response for: " + prompt);
+                // TODO: Implement actual llama.cpp inference here
+                Thread.sleep(1500); // Simulate inference time
+                
+                // Simple rule-based responses for now
+                if (prompt.toLowerCase().contains("hello")) {
+                    return "Hello! I'm your offline AI assistant. How can I help you today?";
+                } else if (prompt.toLowerCase().contains("how are you")) {
+                    return "I'm doing great! Thanks for asking. I'm ready to assist you with anything you need.";
+                } else {
+                    return "That's interesting! Tell me more about that. I'm learning to have better conversations.";
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to generate response", e);
+                return "Sorry, I encountered an error while generating a response.";
+            }
+        }, executor);
+    }
+    
+    public boolean isModelReady() {
+        return isModelLoaded;
+    }
+    
+    public void cleanup() {
+        executor.shutdown();
+        // TODO: Cleanup llama.cpp resources
+    }
+}
+```
+
+### 2. Create ModelManager.java
+Create file: app/src/main/java/com/example/chatcompanion/ModelManager.java
+
+```java
+package com.example.chatcompanion;
+
+import android.content.Context;
+import android.util.Log;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class ModelManager {
+    private static final String TAG = "ModelManager";
+    private static final String MODEL_FILE_NAME = "gemma-2b.gguf";
+    private static final long MODEL_SIZE_BYTES = 1395864376L; // ~1.3GB
+    
+    public static File getModelFile(Context context) {
+        return new File(context.getFilesDir(), MODEL_FILE_NAME);
+    }
+    
+    public static boolean modelExists(Context context) {
+        File modelFile = getModelFile(context);
+        return modelFile.exists() && modelFile.length() > 0;
+    }
+    
+    public static long getModelSize(Context context) {
+        File modelFile = getModelFile(context);
+        return modelFile.exists() ? modelFile.length() : 0;
+    }
+    
+    public static boolean isModelComplete(Context context) {
+        return modelExists(context) && getModelSize(context) >= MODEL_SIZE_BYTES - 1000000; // Allow 1MB tolerance
+    }
+    
+    public static void copyModelFromAssets(Context context) {
+        // TODO: Implement model copying from assets if bundled
+        Log.d(TAG, "Model copying from assets not implemented yet");
+    }
+    
+    public static void deleteModel(Context context) {
+        File modelFile = getModelFile(context);
+        if (modelFile.exists()) {
+            boolean deleted = modelFile.delete();
+            Log.d(TAG, "Model deleted: " + deleted);
+        }
+    }
+}
+```
+
+### 3. Update MainActivity.java
+Modify the existing MainActivity.java to use LLMService:
+
+Replace the sendButton OnClickListener with this:
+
+```java
+sendButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        String message = messageInput.getText().toString().trim();
+        if (!message.isEmpty()) {
+            // Add user message to chat
+            chatDisplay.append("You: " + message + "\n");
+            
+            // Clear input
+            messageInput.setText("");
+            
+            // Show loading indicator
+            responseText.setText("Thinking...");
+            
+            // Get LLM response
+            LLMService llmService = LLMService.getInstance(MainActivity.this);
+            llmService.generateResponse(message)
+                .thenAccept(response -> {
+                    runOnUiThread(() -> {
+                        responseText.setText(response);
+                        chatDisplay.append("Bot: " + response + "\n\n");
+                    });
+                });
+        } else {
+            Toast.makeText(MainActivity.this, "Please enter a message", Toast.LENGTH_SHORT).show();
+        }
+    }
+});
+```
+
+And add this to onCreate() method:
+
+```java
+// Initialize LLM Service
+LLMService llmService = LLMService.getInstance(this);
+if (!llmService.isModelReady()) {
+    responseText.setText("Loading AI model...");
+    llmService.loadModel().thenAccept(success -> {
+        runOnUiThread(() -> {
+            if (success) {
+                responseText.setText("AI model ready! Start chatting...");
+            } else {
+                responseText.setText("Failed to load AI model");
+            }
+        });
+    });
+}
+```
+
+## Project Context:
+- App: Chat Companion with offline LLM
+- Goal: Create service layer for llama.cpp integration
+- Next: Download actual Gemma 2B model file
+- Performance: Target 2-5 tokens/second inference
+
+## Priority:
+- Create clean service architecture
+- Ensure async operations don't block UI
+- Prepare for real llama.cpp integration
+- Maintain existing UI functionality
+
+Please create these service classes and update MainActivity. Let me know if any issues arise!
+
+---

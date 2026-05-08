@@ -1,0 +1,57 @@
+# Gemini Agent Prompt - Step 1: Add Dependencies
+# Copy and paste this into Android Studio's AI agent
+
+---
+Hello! I'm integrating llama.cpp into my Android chat companion app for offline LLM functionality. Please help me add the necessary dependencies.
+
+## Task: Add llama.cpp Android Dependencies
+
+### 1. Update app/build.gradle
+Add these dependencies to the existing dependencies block:
+
+```gradle
+// llama.cpp Android binding
+implementation 'com.github.ggerganov:llama.cpp.android:0.0.1'
+
+// For model file management
+implementation 'androidx.work:work-runtime:2.9.0'
+
+// For async operations
+implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+```
+
+### 2. Add permissions to AndroidManifest.xml
+Add these permissions inside the <manifest> tag:
+
+```xml
+<!-- For reading model files from storage -->
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_MEDIA_FILES" />
+
+<!-- For network access (initial model download) -->
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+### 3. Update proguard rules (if needed)
+Create app/src/main/proguard-rules.pro with:
+
+```proguard
+-keep class com.ggml.** { *; }
+-keep class org.ggml.** { *; }
+-keep class llama.cpp.** { *; }
+```
+
+## Project Context:
+- App: Chat Companion for Samsung S26 Ultra
+- Goal: Offline LLM integration with llama.cpp
+- Model: Gemma 2B GGUF (1.3GB)
+- Current build: Working with Java 17, target SDK 34
+
+## Priority:
+- Get dependencies added without breaking existing functionality
+- Ensure Gradle sync completes successfully
+- Maintain compatibility with existing MainActivity.java
+
+Please add these dependencies and sync the project. Let me know if any conflicts arise!
+
+---

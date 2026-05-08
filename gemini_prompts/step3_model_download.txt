@@ -1,0 +1,263 @@
+# Gemini Agent Prompt - Step 3: Model Downloading Logic
+# Copy and paste this into Android Studio's AI agent
+
+---
+Excellent! The build is successful with real llama.cpp integration. Now let's implement the model downloading logic to get Gemma 2B working.
+
+## Task: Implement Model Downloading and Loading
+
+### 1. Update LLMService.java for Real llama.cpp Integration
+Replace the current LLMService.java with real llama.cpp implementation:
+
+```java
+package com.example.chatcompanion;
+
+import android.content.Context;
+import android.util.Log;
+import io.github.ljcamargo.llamacpp.LlamaCpp;
+import io.github.ljcamargo.llamacpp.LlamaCppModel;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class LLMService {
+    private static final String TAG = "LLMService";
+    private static LLMService instance;
+    private final ExecutorService executor;
+    private LlamaCppModel model;
+    private boolean isModelLoaded = false;
+    private Context context;
+    
+    private LLMService(Context context) {
+        this.context = context.getApplicationContext();
+        this.executor = Executors.newSingleThreadExecutor();
+    }
+    
+    public static synchronized LLMService getInstance(Context context) {
+        if (instance == null) {
+            instance = new LLMService(context);
+        }
+        return instance;
+    }
+    
+    public CompletableFuture<Boolean> loadModel() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Log.d(TAG, "Starting model load...");
+                
+                // Check if model file exists
+                if (!ModelManager.modelExists(context)) {
+                    Log.e(TAG, "Model file not found");
+                    return false;
+                }
+                
+                // Load the model with llama.cpp
+                File modelFile = ModelManager.getModelFile(context);
+                model = LlamaCpp.loadModel(modelFile.getAbsolutePath());
+                
+                isModelLoaded = true;
+                Log.d(TAG, "Model loaded successfully");
+                return true;
+                
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to load model", e);
+                return false;
+            }
+        }, executor);
+    }
+    
+    public CompletableFuture<String> generateResponse(String prompt) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (!isModelLoaded || model == null) {
+                return "Model not loaded yet. Please wait...";
+            }
+            
+            try {
+                Log.d(TAG, "Generating response for: " + prompt);
+                
+                // Generate response with llama.cpp
+                String response = model.generate(prompt, 512); // Max 512 tokens
+                
+                if (response == null || response.trim().isEmpty()) {
+                    return "I'm thinking... but couldn't generate a response. Try again?";
+                }
+                
+                return response.trim();
+                
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to generate response", e);
+                return "Sorry, I encountered an error while generating a response.";
+            }
+        }, executor);
+    }
+    
+    public boolean isModelReady() {
+        return isModelLoaded && model != null;
+    }
+    
+    public void cleanup() {
+        executor.shutdown();
+        if (model != null) {
+            try {
+                model.close();
+            } catch (Exception e) {
+                Log.e(TAG, "Error closing model", e);
+            }
+        }
+    }
+}
+```
+
+### 2. Create ModelDownloader.java
+Create file: app/src/main/java/com/example/chatcompanion/ModelDownloader.java
+
+```java
+package com.example.chatcompanion;
+
+import android.content.Context;
+import android.util.Log;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+
+public class ModelDownloader {
+    private static final String TAG = "ModelDownloader";
+    private static final String MODEL_URL = "https://huggingface.co/google/gemma-2b-it-gguf/resolve/main/gemma-2b-it.gguf";
+    private static final String MODEL_FILE_NAME = "gemma-2b-it.gguf";
+    
+    public interface DownloadProgress {
+        void onProgress(int percent);
+        void onComplete(File modelFile);
+        void onError(String error);
+    }
+    
+    public static CompletableFuture<File> downloadModel(Context context, DownloadProgress progress) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                File modelFile = new File(context.getFilesDir(), MODEL_FILE_NAME);
+                
+                // Check if model already exists
+                if (modelFile.exists() && modelFile.length() > 1400000000L) { // ~1.4GB
+                    Log.d(TAG, "Model already exists");
+                    if (progress != null) progress.onComplete(modelFile);
+                    return modelFile;
+                }
+                
+                Log.d(TAG, "Starting model download...");
+                URL url = new URL(MODEL_URL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+                
+                int fileLength = connection.getContentLength();
+                InputStream input = connection.getInputStream();
+                FileOutputStream output = new FileOutputStream(modelFile);
+                
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                long totalBytesRead = 0;
+                
+                while ((bytesRead = input.read(buffer)) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                    
+                    if (progress != null && fileLength > 0) {
+                        int percent = (int) ((totalBytesRead * 100) / fileLength);
+                        progress.onProgress(percent);
+                    }
+                }
+                
+                output.flush();
+                output.close();
+                input.close();
+                connection.disconnect();
+                
+                Log.d(TAG, "Model download completed");
+                if (progress != null) progress.onComplete(modelFile);
+                return modelFile;
+                
+            } catch (Exception e) {
+                Log.e(TAG, "Model download failed", e);
+                if (progress != null) progress.onError("Download failed: " + e.getMessage());
+                return null;
+            }
+        });
+    }
+}
+```
+
+### 3. Update MainActivity.java for Model Download
+Add model download logic to MainActivity:
+
+Add this to the onCreate() method:
+
+```java
+// Check and download model if needed
+LLMService llmService = LLMService.getInstance(this);
+if (!ModelManager.modelExists(this)) {
+    responseText.setText("Downloading AI model (1.4GB)...");
+    
+    ModelDownloader.DownloadProgress progress = new ModelDownloader.DownloadProgress() {
+        @Override
+        public void onProgress(int percent) {
+            runOnUiThread(() -> responseText.setText("Downloading AI model: " + percent + "%"));
+        }
+        
+        @Override
+        public void onComplete(File modelFile) {
+            runOnUiThread(() -> {
+                responseText.setText("Model downloaded! Loading AI...");
+                loadAIModel();
+            });
+        }
+        
+        @Override
+        public void onError(String error) {
+            runOnUiThread(() -> responseText.setText("Download failed: " + error));
+        }
+    };
+    
+    ModelDownloader.downloadModel(this, progress);
+} else {
+    loadAIModel();
+}
+
+// Add this helper method
+private void loadAIModel() {
+    LLMService llmService = LLMService.getInstance(this);
+    llmService.loadModel().thenAccept(success -> {
+        runOnUiThread(() -> {
+            if (success) {
+                responseText.setText("AI ready! Start chatting...");
+            } else {
+                responseText.setText("Failed to load AI model");
+            }
+        });
+    });
+}
+```
+
+### 4. Add Internet Permission (if not already there)
+Ensure AndroidManifest.xml has:
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+## Project Context:
+- App: Chat Companion with real offline LLM
+- Model: Gemma 2B (1.4GB) from Hugging Face
+- Goal: Implement automatic model download and loading
+- Performance: Real inference with llama.cpp
+
+## Priority:
+- Implement model download with progress
+- Integrate real llama.cpp inference
+- Handle download errors gracefully
+- Test end-to-end functionality
+
+Please implement these changes for real offline LLM functionality!
+
+---

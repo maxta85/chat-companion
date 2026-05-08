@@ -1,0 +1,48 @@
+# Gemini Agent Prompt - Setup Android Emulator
+# Copy and paste this into Android Studio's AI agent
+
+---
+I want to test my chat companion app in the Android emulator before deploying to my physical Samsung S26 Ultra.
+
+## Task: Setup Android Emulator for Testing
+
+### 1. Create Virtual Device
+Please help me create an Android emulator suitable for testing:
+
+- **Device**: Pixel 6 or similar (good performance)
+- **System**: Android 13 (API level 33) or Android 14 (API level 34)
+- **RAM**: At least 4GB (for LLM testing)
+- **Storage**: 8GB+ (for model file space)
+- **Hardware Acceleration**: Use x86_64 with Intel HAXM or AMD Hyper-V
+
+### 2. Emulator Configuration
+- Enable "Use hardware graphics acceleration"
+- Set internal storage to 6GB or higher
+- Enable "Google Play Services" if available
+
+### 3. Build and Run
+After emulator setup:
+- Build the APK: Build > Build Bundle(s) / APK(s) > Build APK(s)
+- Run on emulator: Click the green play button with emulator selected
+
+### 4. Testing Benefits
+- Test LLM service integration without phone
+- Debug with Android Studio tools
+- Faster iteration cycle
+- No need to transfer APK each time
+
+## Project Context:
+- App: Chat Companion with offline LLM integration
+- Goal: Test service classes and model loading
+- Current Status: Dependencies added, service classes created
+- Next: Test LLMService and ModelManager functionality
+
+## Priority:
+- Get emulator running quickly
+- Test current app functionality
+- Verify LLM service initialization
+- Prepare for model download testing
+
+Please help me set up the emulator and run the app for testing!
+
+---
