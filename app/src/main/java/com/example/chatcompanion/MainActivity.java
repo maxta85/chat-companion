@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
                 if (!message.isEmpty()) {
                     chatDisplay.append("You: " + message + "\n");
                     messageInput.setText("");
-                    responseText.setText("Mistral 7B is thinking...");
+                    responseText.setText("AI thinking...");
                     
                     LLMService.getInstance(MainActivity.this).generateResponse(message)
                         .thenAccept(response -> {
@@ -137,14 +137,14 @@ public class MainActivity extends Activity {
 
     private void loadAIModel() {
         LLMService llmService = LLMService.getInstance(this);
-        responseText.setText("Loading Mistral 7B model (4.1GB)...");
+        responseText.setText("Loading model...");
         
         llmService.loadModel().thenAccept(success -> {
             runOnUiThread(() -> {
                 if (success) {
-                    responseText.setText("✅ Mistral 7B loaded! Real AI ready!");
+                    responseText.setText("✅ Model loaded! Real AI ready!");
                 } else {
-                    responseText.setText("❌ Failed to load Mistral 7B. Using smart responses.");
+                    responseText.setText("❌ Failed to load model. Using smart responses.");
                 }
             });
         });
