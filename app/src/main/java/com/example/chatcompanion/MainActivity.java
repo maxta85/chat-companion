@@ -34,6 +34,16 @@ public class MainActivity extends Activity {
         chatDisplay = findViewById(R.id.chatDisplay);
         responseText = findViewById(R.id.responseText);
         
+        // Settings button
+        Button openSettingsButton = findViewById(R.id.openSettingsButton);
+        openSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+        
         // Set initial text
         chatDisplay.setText("Chat Companion - Ready!\n\n");
         responseText.setText("LLM Response will appear here");

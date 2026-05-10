@@ -25,9 +25,15 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_preferences"
-            android:contentDescription="Settings" />
+            android:contentDescription="Menu" />
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/openSettingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⚙️ Open Settings"
+        android:layout_marginBottom="8dp" />
 
     <ScrollView
         android:layout_width="match_parent"

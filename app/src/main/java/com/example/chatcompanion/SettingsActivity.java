@@ -15,10 +15,13 @@ public class SettingsActivity extends Activity {
     private TextView modelSizeText;
     private TextView modelStatusText;
     private TextView downloadProgressText;
+    private TextView versionText;
+    private TextView updateStatusText;
     private ProgressBar downloadProgressBar;
     private Button downloadButton;
     private Button deleteButton;
     private Button backButton;
+    private Button checkUpdateButton;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +37,14 @@ public class SettingsActivity extends Activity {
         downloadButton = findViewById(R.id.downloadButton);
         deleteButton = findViewById(R.id.deleteButton);
         backButton = findViewById(R.id.backButton);
+        versionText = findViewById(R.id.versionText);
+        updateStatusText = findViewById(R.id.updateStatusText);
+        checkUpdateButton = findViewById(R.id.checkUpdateButton);
         
         // Set model info
         modelNameText.setText("Mistral 7B Instruct v0.2");
         modelSizeText.setText("Size: 4.1 GB");
+        versionText.setText("Current version: " + UpdateManager.getCurrentVersion());
         
         // Update UI state
         updateModelStatus();
@@ -61,6 +68,58 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        
+        checkUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkForUpdates();
+            }
+        });
+    }
+    
+    private void checkForUpdates() {
+        updateStatusText.setText("Checking for updates...");
+        checkUpdateButton.setEnabled(false);
+        
+        UpdateManager.checkForUpdates(this, new UpdateManager.UpdateCheckListener() {
+            @Override
+            public void onUpdateAvailable(String latestVersion, String downloadUrl) {
+                runOnUiThread(() -> {
+                    updateStatusText.setText("Update available: v" + latestVersion);
+                    updateStatusText.setTextColor(0xFF4CAF50);
+                    checkUpdateButton.setText("Download Update");
+                    checkUpdateButton.setEnabled(true);
+                    checkUpdateButton.setTag(downloadUrl);
+                    checkUpdateButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String url = (String) checkUpdateButton.getTag();
+                            if (url != null) {
+                                UpdateManager.downloadAndInstall(SettingsActivity.this, url);
+                                updateStatusText.setText("Download started! Check notifications.");
+                            }
+                        }
+                    });
+                });
+            }
+            
+            @Override
+            public void onUpdateNotAvailable() {
+                runOnUiThread(() -> {
+                    updateStatusText.setText("You're on the latest version!");
+                    checkUpdateButton.setEnabled(true);
+                });
+            }
+            
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    updateStatusText.setText("Error: " + error);
+                    updateStatusText.setTextColor(0xFFF44336);
+                    checkUpdateButton.setEnabled(true);
+                });
             }
         });
     }
