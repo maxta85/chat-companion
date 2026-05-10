@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
         }
         
         sb.append("First Run: ").append(ModelManager.isFirstRun(this)).append("\n");
-        sb.append("Version: 3.8");
+        sb.append("Version: 4.0");
         
         debugText.setText(sb.toString());
     }
