@@ -91,6 +91,27 @@ public class MainActivity extends Activity {
         });
     }
 
+    private void updateDebugPanel() {
+        if (debugText == null) return;
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== DEBUG ===\n");
+        
+        boolean modelExists = ModelManager.modelExists(this);
+        sb.append("Model: ").append(modelExists ? "✅ Loaded" : "❌ Not found").append("\n");
+        
+        java.io.File modelFile = ModelManager.getCurrentModelFile(this);
+        if (modelFile != null && modelFile.exists()) {
+            long mb = modelFile.length() / (1024 * 1024);
+            sb.append("Size: ").append(mb).append(" MB\n");
+        }
+        
+        sb.append("First Run: ").append(ModelManager.isFirstRun(this)).append("\n");
+        sb.append("Version: 1.4");
+        
+        debugText.setText(sb.toString());
+    }
+    
     private void showMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenu().add("Model Settings");
