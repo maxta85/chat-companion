@@ -91,7 +91,7 @@ public class LLMService {
                 helper.load(modelPath, 2048, null, (loadedTime) -> {
                     // Callback means load process completed
                     isModelLoaded = true;
-                    Log.d(TAG, "Model load callback, time: " + loadedTime + "ms");
+                    Log.d(TAG, "Model loaded! Now testing inference...");
                     future.complete(true);
                     return Unit.INSTANCE;
                 });
