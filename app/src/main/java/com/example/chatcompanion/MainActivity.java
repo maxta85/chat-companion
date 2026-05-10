@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
     private ImageButton menuButton;
     private TextView chatDisplay;
     private TextView responseText;
+    private TextView debugText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,10 @@ public class MainActivity extends Activity {
         menuButton = findViewById(R.id.menuButton);
         chatDisplay = findViewById(R.id.chatDisplay);
         responseText = findViewById(R.id.responseText);
+        
+        // Update debug panel
+        debugText = findViewById(R.id.debugText);
+        updateDebugPanel();
         
         // Settings button
         Button openSettingsButton = findViewById(R.id.openSettingsButton);

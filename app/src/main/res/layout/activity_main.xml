@@ -64,6 +64,18 @@
         android:background="#e8f5e8"
         android:padding="12dp" />
 
+    <TextView
+        android:id="@+id/debugText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Debug: "
+        android:textSize="10sp"
+        android:textColor="#888888"
+        android:background="#f5f5f5"
+        android:padding="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="monospace" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

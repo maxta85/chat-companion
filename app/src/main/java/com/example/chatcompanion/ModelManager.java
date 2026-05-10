@@ -87,6 +87,16 @@ public class ModelManager {
         }
     }
     
+    public static boolean isFirstRun(Context context) {
+        return !context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            .getBoolean("first_run_complete", false);
+    }
+    
+    public static void completeFirstRun(Context context) {
+        context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            .edit().putBoolean("first_run_complete", true).apply();
+    }
+    
     public static boolean modelExists(Context context) {
         File modelFile = getCurrentModelFile(context);
         return modelFile.exists() && modelFile.length() > 1024 * 1024; // At least 1MB
