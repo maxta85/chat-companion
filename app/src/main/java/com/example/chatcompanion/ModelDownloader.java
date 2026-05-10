@@ -15,7 +15,7 @@ public class ModelDownloader {
     
     // Available models - smaller first
     private static final String[][] MODELS = {
-        {"tinyllama-1b", "TinyLlama 1B", "tinyllama-1.1b-chat.Q4_K_M.gguf", "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat.Q4_K_M.gguf", "637MB"},
+        {"tinyllama-1b", "TinyLlama 1B", "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf", "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf", "637MB"},
         {"phi-3-mini", "Phi-3 Mini", "phi-3-mini-4k-instruct-q4.gguf", "https://huggingface.co/TheBloke/Phi-3-mini-4k-instruct-GGUF/resolve/main/phi-3-mini-4k-instruct-q4.gguf", "2.3GB"},
         {"mistral-7b", "Mistral 7B", "mistral-7b-instruct-v0.2.Q4_K_M.gguf", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf", "4.1GB"},
     };
