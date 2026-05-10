@@ -82,6 +82,8 @@ public class MainActivity extends Activity {
                             runOnUiThread(() -> {
                                 responseText.setText(response);
                                 chatDisplay.append("Bot: " + response + "\n\n");
+                                // Update debug panel after response
+                                updateDebugPanel();
                             });
                         });
                 } else {
