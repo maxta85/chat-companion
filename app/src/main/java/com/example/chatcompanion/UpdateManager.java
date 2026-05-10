@@ -13,7 +13,7 @@ import java.net.URL;
 
 public class UpdateManager {
     private static final String TAG = "UpdateManager";
-    private static final String CURRENT_VERSION = "2.4";
+    private static final String CURRENT_VERSION = "2.5";
     private static final String VERSION_CHECK_URL = "https://raw.githubusercontent.com/maxta85/chat-companion/main/version.txt";
     
     public interface UpdateCheckListener {
