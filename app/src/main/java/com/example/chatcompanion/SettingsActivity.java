@@ -304,7 +304,7 @@ public class SettingsActivity extends Activity {
                     
                     new AlertDialog.Builder(SettingsActivity.this)
                         .setTitle("Update Available")
-                        .setMessage("Version " + version + " available. Download?")
+                        .setMessage("Version " + version + " available.\n\nNote: Samsung may show \"Untrusted app\" warning. This is normal - tap \"Install anyway\" or go to Settings > Security to allow.")
                         .setPositiveButton("Download", (d, w) -> {
                             UpdateManager.downloadAndInstall(SettingsActivity.this, url);
                         })
