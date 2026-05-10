@@ -1,1 +1,1 @@
-3.5|https://github.com/maxta85/chat-companion/releases/download/v3.5/chat-companion-v3.5.apk
+3.6|https://github.com/maxta85/chat-companion/releases/download/v3.6/chat-companion-v3.6.apk
