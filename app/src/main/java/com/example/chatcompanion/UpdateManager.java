@@ -17,7 +17,7 @@ public class UpdateManager {
     private static final String TAG = "UpdateManager";
     private static final String REPO_OWNER = "maxta85";
     private static final String REPO_NAME = "chat-companion";
-    private static final String CURRENT_VERSION = "1.7";
+    private static final String CURRENT_VERSION = "2.1";
     
     public interface UpdateCheckListener {
         void onUpdateAvailable(String latestVersion, String downloadUrl);
