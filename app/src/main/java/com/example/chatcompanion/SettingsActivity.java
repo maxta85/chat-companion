@@ -198,6 +198,8 @@ public class SettingsActivity extends Activity {
             @Override
             public void onComplete(java.io.File modelFile) {
                 runOnUiThread(() -> {
+                    // Set this as the current model to use
+                    ModelManager.setCurrentModelIndex(SettingsActivity.this, selectedModelIndex);
                     Toast.makeText(SettingsActivity.this, "Model ready!", Toast.LENGTH_SHORT).show();
                     updateModelStatus();
                 });

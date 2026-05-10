@@ -15,12 +15,11 @@ import java.util.zip.ZipOutputStream;
 public class ModelManager {
     private static final String TAG = "ModelManager";
     
-    // Available models and their sizes
+    // Available models - tiny first!
     public static final String[][] MODELS = {
+        {"tinyllama-1b", "TinyLlama 1B", "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf", "637 MB"},
         {"mistral-7b", "Mistral 7B", "mistral-7b-instruct-v0.2.Q4_K_M.gguf", "4.1 GB"},
         {"phi-3-mini", "Phi-3 Mini", "phi-3-mini-4k-instruct-q4.gguf", "2.3 GB"},
-        {"llama-3-8b", "Llama 3 8B", "Meta-Llama-3-8B-Instruct-Q4_K_M.gguf", "4.9 GB"},
-        {"gemma-7b", "Gemma 7B", "gemma-7b-it-q4.gguf", "4.2 GB"}
     };
     
     private static final String MODEL_DIR_NAME = "LLMModels";
