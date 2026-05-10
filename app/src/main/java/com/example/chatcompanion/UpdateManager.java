@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -87,45 +85,14 @@ public class UpdateManager {
     }
     
     public static void downloadAndInstall(Context context, String downloadUrl) {
-        // Download to app's external files directory
-        File apkFile = new File(context.getExternalFilesDir(null), "chat-companion-update.apk");
-        
-        new Thread(() -> {
-            try {
-                Log.d(TAG, "Downloading: " + downloadUrl);
-                HttpURLConnection conn = (HttpURLConnection) new URL(downloadUrl).openConnection();
-                conn.setConnectTimeout(30000);
-                conn.setReadTimeout(30000);
-                
-                try (FileOutputStream fos = new FileOutputStream(apkFile);
-                     java.io.InputStream is = conn.getInputStream()) {
-                    byte[] buffer = new byte[8192];
-                    int bytesRead;
-                    while ((bytesRead = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, bytesRead);
-                    }
-                }
-                
-                Log.d(TAG, "Downloaded: " + apkFile.getAbsolutePath());
-                
-                final File f = apkFile;
-                final String url = downloadUrl;
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(f), "application/vnd.android.package-archive");
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } catch (Exception e) {
-                        // Fallback: open in browser
-                        Log.e(TAG, "Direct install failed, opening browser", e);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        context.startActivity(intent);
-                    }
-                });
-            } catch (Exception e) {
-                Log.e(TAG, "Download failed", e);
-            }
-        }).start();
+        // Simple approach: open in browser, let user download
+        Log.d(TAG, "Opening browser for: " + downloadUrl);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Log.e(TAG, "Browser open failed", e);
+        }
     }
 }
