@@ -51,7 +51,7 @@ public class AboutActivity extends Activity {
         githubButton = findViewById(R.id.githubButton);
         
         // Set current version
-        versionText.setText("Chat Companion v1.0");
+        versionText.setText("Chat Companion v4.1");
         updateStatusText.setText("Tap 'Check for Updates' to see if a new version is available.");
         
         // Set up button listeners
@@ -98,6 +98,7 @@ public class AboutActivity extends Activity {
     
     private class CheckUpdateTask extends AsyncTask<Void, Void, String> {
         private String latestVersion;
+        private String downloadUrl;
         
         @Override
         protected String doInBackground(Void... voids) {
@@ -111,11 +112,18 @@ public class AboutActivity extends Activity {
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    latestVersion = reader.readLine().trim();
+                    String line = reader.readLine();
+                    if (line != null) {
+                        String[] parts = line.split("\\|");
+                        latestVersion = parts[0].trim();
+                        if (parts.length > 1) {
+                            downloadUrl = parts[1].trim();
+                        }
+                    }
                     reader.close();
                     
                     // Compare versions
-                    if ("1.0".equals(latestVersion)) {
+                    if ("4.1".equals(latestVersion)) {
                         return "up_to_date";
                     } else {
                         return "update_available";
@@ -142,6 +150,10 @@ public class AboutActivity extends Activity {
                     case "update_available":
                         updateStatusText.setText("🔄 Update available! Version " + latestVersion + " is ready to download.");
                         downloadUpdateButton.setVisibility(View.VISIBLE);
+                        // Save the download URL for the next task
+                        if (downloadUrl != null) {
+                            getSharedPreferences("updates", MODE_PRIVATE).edit().putString("download_url", downloadUrl).apply();
+                        }
                         break;
                     case "error":
                         updateStatusText.setText("❌ Failed to check for updates. Please check your internet connection.");
@@ -153,20 +165,26 @@ public class AboutActivity extends Activity {
     }
     
     private void downloadUpdate() {
+        String downloadUrl = getSharedPreferences("updates", MODE_PRIVATE).getString("download_url", GITHUB_APK_URL);
         updateStatusText.setText("Downloading update...");
         downloadUpdateButton.setEnabled(false);
         updateProgressBar.setVisibility(View.VISIBLE);
         
-        new DownloadUpdateTask().execute();
+        new DownloadUpdateTask(downloadUrl).execute();
     }
     
     private class DownloadUpdateTask extends AsyncTask<Void, Integer, Boolean> {
         private File apkFile;
+        private String urlStr;
+
+        public DownloadUpdateTask(String url) {
+            this.urlStr = url;
+        }
         
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                URL url = new URL(GITHUB_APK_URL);
+                URL url = new URL(urlStr);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(10000);
