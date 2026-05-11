@@ -84,7 +84,7 @@ public class LLMService {
                 }
                 
                 File modelFile = ModelManager.getModelFile(context);
-                String modelPath = modelFile.getAbsolutePath();
+                String modelPath = "file://" + modelFile.getAbsolutePath();
                 Log.d(TAG, "Loading model from: " + modelPath);
                 
                 // Load the model. The library uses a callback for when it's finished loading.
@@ -99,7 +99,7 @@ public class LLMService {
                 // Safety timeout for the future
                 executor.execute(() -> {
                     try {
-                        Thread.sleep(30000); // 30s timeout for model loading
+                        Thread.sleep(60000); // 60s timeout for model loading
                         if (!future.isDone()) {
                             Log.e(TAG, "Model load timed out");
                             future.complete(false);
