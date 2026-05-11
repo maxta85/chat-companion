@@ -51,7 +51,7 @@ public class AboutActivity extends Activity {
         githubButton = findViewById(R.id.githubButton);
         
         // Set current version
-        versionText.setText("Chat Companion v4.1");
+        versionText.setText("Chat Companion v4.2");
         updateStatusText.setText("Tap 'Check for Updates' to see if a new version is available.");
         
         // Set up button listeners
@@ -123,7 +123,7 @@ public class AboutActivity extends Activity {
                     reader.close();
                     
                     // Compare versions
-                    if ("4.1".equals(latestVersion)) {
+                    if ("4.2".equals(latestVersion)) {
                         return "up_to_date";
                     } else {
                         return "update_available";
